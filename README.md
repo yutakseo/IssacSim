@@ -35,18 +35,6 @@ docker compose exec ros2 bash
 
 ---
 
-## OS별 한 줄 요약
-
-| OS | 권장 명령 |
-|----|-----------|
-| **Linux** (NVIDIA GPU 있음) | `docker compose up -d` |
-| **Linux** (GPU 없음) | `docker compose up -d ros2` |
-| **macOS** | `docker compose up -d ros2` |
-| **Windows** (NVIDIA GPU 있음) | `docker compose up -d` |
-| **Windows** (GPU 없음) | `docker compose up -d ros2` |
-
----
-
 ## 디렉터리 구조
 
 ```
