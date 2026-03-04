@@ -37,6 +37,21 @@ services:
               count: all
               capabilities: [gpu]
 
+  ros2:
+    build:
+      context: ./ros2
+      dockerfile: Dockerfile
+    image: ros2-jazzy:latest
+    container_name: ros2
+    network_mode: host
+    environment:
+      ROS_DOMAIN_ID: "0"
+      RMW_IMPLEMENTATION: "rmw_fastrtps_cpp"
+    volumes:
+      - ./ros2/ros2_ws:/ros2_ws
+    stdin_open: true
+    tty: true
+
 volumes:
   isaac-cache:
   isaac-nv:
