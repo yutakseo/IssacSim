@@ -10,6 +10,7 @@ services:
     shm_size: "32gb"
     environment:
       ACCEPT_EULA: "Y"
+      NVIDIA_VISIBLE_DEVICES: "all"
       SIGNAL_PORT: "49100"
       STREAM_PORT: "47998"
       WIDTH: "2560"
