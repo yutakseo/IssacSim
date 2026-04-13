@@ -6,7 +6,6 @@ services:
     image: isaac-sim-stream:5.1.0
     container_name: isaac-sim
     runtime: nvidia
-    network_mode: host
     shm_size: "32gb"
     environment:
       ACCEPT_EULA: "Y"
@@ -15,15 +14,38 @@ services:
       ROS_DOMAIN_ID: "0"
       ROS_DISTRO: "jazzy"
       RMW_IMPLEMENTATION: "rmw_fastrtps_cpp"
+
+      # Native streaming
       SIGNAL_PORT: "49100"
       STREAM_PORT: "47998"
+
+      # WebRTC / browser access
+      WEBRTC_HTTP_PORT: "8211"
+
       WIDTH: "1920"
       HEIGHT: "1080"
-      TARGET_FPS: "120"
-      # PUBLIC_IP: ""  # NAT/다중 NIC 시 설정 (예: "192.168.0.10")
-    user: "1234:1234"
+      TARGET_FPS: "60"
+
+      # 다중 NIC 또는 외부 접속 시 명시
+      # 예: PUBLIC_IP=192.168.0.51
+      PUBLIC_IP: "203.255.15.92"
+
+    ports:
+      - "8211:8211/tcp"
+      - "49100:49100/tcp"
+      - "47998:47998/udp"
+
     volumes:
       - ./isaac-sim/volumes/logs:/isaac-sim/.nvidia-omniverse/logs
+      - ./isaac-sim/volumes/cache:/isaac-sim/.cache
+      - ./isaac-sim/volumes/data:/isaac-sim/.local/share/ov/data
+      - ./isaac-sim/volumes/config:/isaac-sim/.config
+      - ./isaac-sim/volumes/documents:/isaac-sim/Documents
+
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
     deploy:
       resources:
         reservations:
@@ -38,7 +60,6 @@ services:
       dockerfile: Dockerfile
     image: ros2-jazzy:latest
     container_name: ros2
-    network_mode: host
     environment:
       ROS_DOMAIN_ID: "0"
       RMW_IMPLEMENTATION: "rmw_fastrtps_cpp"
@@ -47,3 +68,4 @@ services:
     stdin_open: true
     tty: true
     command: ["sleep", "infinity"]
+    restart: unless-stopped
