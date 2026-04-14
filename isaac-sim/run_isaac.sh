@@ -5,6 +5,7 @@ set -euo pipefail
 : "${PUBLIC_IP:=}"
 : "${SIGNAL_PORT:=49100}"
 : "${STREAM_PORT:=47998}"
+: "${WEBRTC_HTTP_PORT:=8211}"
 : "${WIDTH:=2560}"
 : "${HEIGHT:=1440}"
 : "${TARGET_FPS:=60}"
@@ -40,8 +41,10 @@ args=(
   "--/renderer/activeGpu=0"
   "--/rtx/verifyDriverVersion/enabled=false"
   "--/isaac/startup/ros_bridge_extension=isaacsim.ros2.bridge"
+  "--/app/livestream/port=${SIGNAL_PORT}"
   "--/app/renderer/resolution/width=${WIDTH}"
   "--/app/renderer/resolution/height=${HEIGHT}"
+  "--/exts/omni.services.transport.server.http/port=${WEBRTC_HTTP_PORT}"
   "--/exts/omni.kit.livestream.app/primaryStream/signalPort=${SIGNAL_PORT}"
   "--/exts/omni.kit.livestream.app/primaryStream/streamPort=${STREAM_PORT}"
   "--/exts/omni.kit.livestream.app/primaryStream/width=${WIDTH}"
@@ -50,7 +53,8 @@ args=(
 )
 
 if [[ -n "${PUBLIC_IP}" ]]; then
-  args+=("--/exts/omni.kit.livestream.app/primaryStream/publicIp=${PUBLIC_IP}")
+  # 인터넷에서 접속할 때는 공식 문서의 publicEndpointAddress 설정을 사용한다.
+  args+=("--/app/livestream/publicEndpointAddress=${PUBLIC_IP}")
 fi
 
 exec ./runheadless.sh "${args[@]}"

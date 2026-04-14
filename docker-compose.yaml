@@ -5,7 +5,9 @@ services:
       dockerfile: Dockerfile
     image: isaac-sim-stream:5.1.0
     container_name: isaac-sim
+    user: "0:0"
     runtime: nvidia
+    network_mode: host
     shm_size: "32gb"
     environment:
       ACCEPT_EULA: "Y"
@@ -26,14 +28,14 @@ services:
       HEIGHT: "1080"
       TARGET_FPS: "60"
 
-      # 다중 NIC 또는 외부 접속 시 명시
-      # 예: PUBLIC_IP=192.168.0.51
+      # 다중 NIC 또는 외부(인터넷)에서 접속할 때만 명시.
+      # 로컬/LAN 접속인데 잘못된 IP(예: 공인 IP)를 넣으면 WebRTC가 그 IP로 후보를
+      # 광고해서 "연결은 되는데 화면이 안 뜨는" 증상이 나올 수 있습니다.
+      # 필요할 때 `PUBLIC_IP=<클라이언트에서 도달 가능한 호스트 IP>`로 override 하세요.
       PUBLIC_IP: "203.255.15.92"
 
-    ports:
-      - "8211:8211/tcp"
-      - "49100:49100/tcp"
-      - "47998:47998/udp"
+    # host 네트워크를 쓰면 WebRTC(특히 UDP) NAT/프록시 이슈를 피하기 쉽습니다.
+    # 이 경우 ports 매핑은 불필요합니다.
 
     volumes:
       - ./isaac-sim/volumes/logs:/isaac-sim/.nvidia-omniverse/logs
