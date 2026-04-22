@@ -30,7 +30,7 @@ services:
     volumes:
       - ./isaac-sim/volumes/logs:/isaac-sim/.nvidia-omniverse/logs
       - ./isaac-sim/volumes/cache:/isaac-sim/.cache
-      - ./isaac-sim/volumes/data:/isaac-sim/.local/share/ov/data
+      - ./isaac-sim/volumes/assets:/isaac-sim/.local/share/ov/data
       - ./isaac-sim/volumes/config:/isaac-sim/.config
       - ./isaac-sim/volumes/documents:/isaac-sim/Documents
 
