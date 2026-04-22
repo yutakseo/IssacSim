@@ -5,37 +5,27 @@ services:
       dockerfile: Dockerfile
     image: isaac-sim-stream:5.1.0
     container_name: isaac-sim
-    user: "0:0"
     runtime: nvidia
     network_mode: host
-    shm_size: "32gb"
+    shm_size: "64gb"
     environment:
       ACCEPT_EULA: "Y"
       PRIVACY_CONSENT: "Y"
       NVIDIA_VISIBLE_DEVICES: "all"
+
       ROS_DOMAIN_ID: "0"
-      ROS_DISTRO: "jazzy"
+      ROS_LOCALHOST_ONLY: "0"
       RMW_IMPLEMENTATION: "rmw_fastrtps_cpp"
 
-      # Native streaming
+      ROS_DISTRO: "jazzy"   # ros2 컨테이너가 Ubuntu 24.04 기반일 때만 권장
       SIGNAL_PORT: "49100"
       STREAM_PORT: "47998"
-
-      # WebRTC / browser access
-      WEBRTC_HTTP_PORT: "8211"
-
+      WEBRTC_HTTP_PORT: "8210"
       WIDTH: "1920"
       HEIGHT: "1080"
       TARGET_FPS: "60"
 
-      # 다중 NIC 또는 외부(인터넷)에서 접속할 때만 명시.
-      # 로컬/LAN 접속인데 잘못된 IP(예: 공인 IP)를 넣으면 WebRTC가 그 IP로 후보를
-      # 광고해서 "연결은 되는데 화면이 안 뜨는" 증상이 나올 수 있습니다.
-      # 필요할 때 `PUBLIC_IP=<클라이언트에서 도달 가능한 호스트 IP>`로 override 하세요.
-      PUBLIC_IP: "203.255.15.92"
-
-    # host 네트워크를 쓰면 WebRTC(특히 UDP) NAT/프록시 이슈를 피하기 쉽습니다.
-    # 이 경우 ports 매핑은 불필요합니다.
+      PUBLIC_IP: "${PUBLIC_IP:-}"
 
     volumes:
       - ./isaac-sim/volumes/logs:/isaac-sim/.nvidia-omniverse/logs
@@ -48,26 +38,28 @@ services:
     tty: true
     restart: unless-stopped
 
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-
   ros2:
     build:
       context: ./ros2
       dockerfile: Dockerfile
     image: ros2-jazzy:latest
     container_name: ros2
+    network_mode: host
     environment:
       ROS_DOMAIN_ID: "0"
+      ROS_LOCALHOST_ONLY: "0"
       RMW_IMPLEMENTATION: "rmw_fastrtps_cpp"
     volumes:
-      - ./ros2/volumes:/ros2_ws
+      - ./ros2/src:/ros2_ws/src
+      - ros2_build:/ros2_ws/build
+      - ros2_install:/ros2_ws/install
+      - ros2_log:/ros2_ws/log
     stdin_open: true
     tty: true
-    command: ["sleep", "infinity"]
+    command: ["/bin/bash"]
     restart: unless-stopped
+
+volumes:
+  ros2_build:
+  ros2_install:
+  ros2_log:
