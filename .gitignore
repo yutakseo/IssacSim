@@ -1,13 +1,10 @@
 .cursor/
 
-# Volume data (디렉터리 구조만 유지, 내용은 무시)
-isaac-sim/logs/*
-isaac-sim/documents/*
-isaac-sim/config/*
-isaac-sim/assets/*
-!isaac-sim/logs/.gitkeep
+IsaacSim/logs/
+IsaacSim/assets/
+IsaacSim/cache/
+IsaacSim/config/
+IsaacSim/documents/
 
-
-ros2/volumes/*
-!ros2/volumes/.gitkeep
+ROS2/volumes/
 
