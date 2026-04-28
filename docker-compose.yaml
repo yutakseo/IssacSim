@@ -1,7 +1,7 @@
 services:
   isaac-sim:
     container_name: isaac-sim
-    image: nvcr.io/nvidia/isaac-sim:5.1.0
+    image: nvcr.io/nvidia/isaac-lab:2.3.2
     user: "0:0"
     runtime: nvidia
     network_mode: host
@@ -10,23 +10,27 @@ services:
       ACCEPT_EULA: "Y"
       PRIVACY_CONSENT: "Y"
       NVIDIA_VISIBLE_DEVICES: "all"
+
       ROS_DOMAIN_ID: "0"
       ROS_LOCALHOST_ONLY: "0"
       RMW_IMPLEMENTATION: "rmw_fastrtps_cpp"
       ROS_DISTRO: "jazzy"
+
       SIGNAL_PORT: "49100"
       STREAM_PORT: "47998"
       WEBRTC_HTTP_PORT: "8211"
       PUBLIC_IP: "203.255.15.92"
+
     volumes:
-      - ./isaac-sim/volumes/logs:/isaac-sim/.nvidia-omniverse/logs
-      - ./isaac-sim/volumes/cache:/isaac-sim/.cache
-      - ./isaac-sim/volumes/assets:/isaac-sim/.local/share/ov/data
-      - ./isaac-sim/volumes/config:/isaac-sim/.config
-      - ./isaac-sim/volumes/documents:/isaac-sim/Documents
+      - ./IsaacSim/documents:/root/Documents
+      - ./IsaacSim/logs:/root/.nvidia-omniverse/logs
+      - ./IsaacSim/config:/root/.config
+      - ./IsaacSim/assets:/root/.local/share/ov/data
+
     stdin_open: true
     tty: true
     restart: unless-stopped
+
     entrypoint:
       - /bin/bash
       - -lc
@@ -43,7 +47,7 @@ services:
     container_name: ros2
     image: ros2-jazzy:latest
     build:
-      context: ./ros2
+      context: ./ROS2
       dockerfile: Dockerfile
     user: "${UID:-1000}:${GID:-1000}"
     network_mode: host
@@ -52,15 +56,8 @@ services:
       ROS_LOCALHOST_ONLY: "0"
       RMW_IMPLEMENTATION: "rmw_fastrtps_cpp"
     volumes:
-      - ./ros2/src:/ros2_ws/src
-      - ros2_build:/ros2_ws/build
-      - ros2_install:/ros2_ws/install
-      - ros2_log:/ros2_ws/log
+      - ./ROS2/src:/ros2_ws/src
     command: ["/bin/bash"]
     stdin_open: true
     tty: true
     restart: unless-stopped
-volumes:
-  ros2_build:
-  ros2_install:
-  ros2_log:
