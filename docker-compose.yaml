@@ -22,10 +22,10 @@ services:
       PUBLIC_IP: "203.255.15.92"
 
     volumes:
-      - ./IsaacSim/documents:/root/Documents
-      - ./IsaacSim/logs:/root/.nvidia-omniverse/logs
-      - ./IsaacSim/config:/root/.config
-      - ./IsaacSim/assets:/root/.local/share/ov/data
+      - ./isaac-sim/documents:/root/Documents
+      - ./isaac-sim/logs:/root/.nvidia-omniverse/logs
+      - ./isaac-sim/config:/root/.config
+      - ./isaac-sim/assets:/root/.local/share/ov/data
 
     stdin_open: true
     tty: true
@@ -47,7 +47,7 @@ services:
     container_name: ros2
     image: ros2-jazzy:latest
     build:
-      context: ./ROS2
+      context: ./ros2
       dockerfile: Dockerfile
     user: "${UID:-1000}:${GID:-1000}"
     network_mode: host
@@ -56,7 +56,7 @@ services:
       ROS_LOCALHOST_ONLY: "0"
       RMW_IMPLEMENTATION: "rmw_fastrtps_cpp"
     volumes:
-      - ./ROS2/src:/ros2_ws/src
+      - ./ros2/src:/ros2_ws/src
     command: ["/bin/bash"]
     stdin_open: true
     tty: true

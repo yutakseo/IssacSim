@@ -12,16 +12,16 @@ class TopicProbe(Node):
     def print_topics(self) -> None:
         topics = sorted(self.get_topic_names_and_types())
         if not topics:
-            self.get_logger().info("No ROS2 topics discovered.")
+            self.get_logger().info("No ROS 2 topics discovered.")
             return
 
-        self.get_logger().info("Discovered ROS2 topics:")
+        self.get_logger().info("Discovered ROS 2 topics:")
         for name, types in topics:
             self.get_logger().info(f"  {name}: {types}")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Print visible ROS2 topics.")
+    parser = argparse.ArgumentParser(description="Print visible ROS 2 topics.")
     parser.add_argument(
         "--wait",
         type=float,

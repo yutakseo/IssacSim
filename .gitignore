@@ -1,10 +1,15 @@
 .cursor/
+.DS_Store
 
-IsaacSim/logs/
-IsaacSim/assets/
-IsaacSim/cache/
-IsaacSim/config/
-IsaacSim/documents/
+isaac-sim/documents/*
+isaac-sim/logs/*
+isaac-sim/config/*
+isaac-sim/assets/*
+!isaac-sim/documents/.gitkeep
+!isaac-sim/logs/.gitkeep
+!isaac-sim/config/.gitkeep
+!isaac-sim/assets/.gitkeep
 
-ROS2/volumes/
-
+ros2/build/
+ros2/install/
+ros2/log/
